@@ -1,5 +1,8 @@
 from enum import Enum
 import time
+import RPi.GPIO as GPIO
+
+from statics import LEFT_SENSOR_TRIGGER_PIN, LEFT_SENSOR_ECHO_PIN, LIGHT_PIN
 from dc_motor import start_motor, stop_motor
 from distances import is_front_empty, is_right_empty, is_left_empty
 from light_sensor import is_enviromental_lights_enough
@@ -18,75 +21,86 @@ class LightState(Enum):
     ON = 1
     OFF = 2
 
+try:
+    #initialize raspberry
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(LEFT_SENSOR_TRIGGER_PIN, GPIO.OUT)
+    GPIO.setup(LEFT_SENSOR_ECHO_PIN, GPIO.IN)
+    GPIO.setup(LIGHT_PIN, GPIO.OUT)
 
-light_state = LightState.OFF
-machine_state = MachineState.LINE2_MOVE
 
-start_command = input("type START to start machine\n")
-while not start_command == "START":
+    light_state = LightState.OFF
+    machine_state = MachineState.LINE2_MOVE
+
     start_command = input("type START to start machine\n")
+    while not start_command == "START":
+        start_command = input("type START to start machine\n")
 
-elapsed_time = 0
-start_motor()
+    elapsed_time = 0
+    start_motor()
 
 
-while True:
-    elapsed_time += 1
-
-    if is_enviromental_lights_enough():
-        light_state = LightState.OFF
-        turn_light_off()
-    else:
-        light_state = LightState.ON
-        turn_light_on()
-
-    if machine_state == MachineState.LINE1_MOVE:
-        if is_front_empty():
-            continue
-        elif is_right_empty():
-            machine_state = MachineState.LINE2_MOVE
-            change_line_to_right()
+    while True:
+        print(f"time: {elapsed_time} {machine_state} {light_state}")
+        time.sleep(1)
+        elapsed_time += 1
+        
+        if is_enviromental_lights_enough():
+            light_state = LightState.OFF
+            turn_light_off()
         else:
-            machine_state = MachineState.LINE1_BREAK
-            stop_motor()
-    
-    elif machine_state == MachineState.LINE1_BREAK:
-        if is_front_empty():
-            machine_state = MachineState.LINE1_MOVE
-            start_motor()
-    
-    elif machine_state == MachineState.LINE2_MOVE:
-        if is_front_empty():
-            continue
-        elif is_right_empty():
-            machine_state = MachineState.LINE3_MOVE
-            change_line_to_right()
-        elif is_left_empty():
-            machine_state = MachineState.LINE1_MOVE
-            change_line_to_left()
-        else:
-            machine_state = MachineState.LINE2_BREAK
-            stop_motor()
-    
-    elif machine_state == MachineState.LINE2_BREAK:
-        if is_front_empty():
-            machine_state = MachineState.LINE2_MOVE
-            start_motor()
-    
-    elif machine_state == MachineState.LINE3_MOVE:
-        if is_front_empty():
-            continue
-        if is_left_empty():
-            machine_state = MachineState.LINE2_MOVE
-            change_line_to_left()
-        else:
-            machine_state = MachineState.LINE3_BREAK
-            stop_motor()
-    
-    elif machine_state == MachineState.LINE3_BREAK:
-        if is_front_empty():
-            machine_state = MachineState.LINE3_MOVE
-            start_motor()
-    
-    print(f"time: {elapsed_time} {machine_state} {light_state}")
-    time.sleep(1)
+            light_state = LightState.ON
+            turn_light_on()
+
+        if machine_state == MachineState.LINE1_MOVE:
+            if is_front_empty():
+                continue
+            elif is_right_empty():
+                machine_state = MachineState.LINE2_MOVE
+                change_line_to_right()
+            else:
+                machine_state = MachineState.LINE1_BREAK
+                stop_motor()
+        
+        elif machine_state == MachineState.LINE1_BREAK:
+            if is_front_empty():
+                machine_state = MachineState.LINE1_MOVE
+                start_motor()
+        
+        elif machine_state == MachineState.LINE2_MOVE:
+            if is_front_empty():
+                continue
+            elif is_right_empty():
+                machine_state = MachineState.LINE3_MOVE
+                change_line_to_right()
+            elif is_left_empty():
+                machine_state = MachineState.LINE1_MOVE
+                change_line_to_left()
+            else:
+                machine_state = MachineState.LINE2_BREAK
+                stop_motor()
+        
+        elif machine_state == MachineState.LINE2_BREAK:
+            if is_front_empty():
+                machine_state = MachineState.LINE2_MOVE
+                start_motor()
+        
+        elif machine_state == MachineState.LINE3_MOVE:
+            if is_front_empty():
+                continue
+            if is_left_empty():
+                machine_state = MachineState.LINE2_MOVE
+                change_line_to_left()
+            else:
+                machine_state = MachineState.LINE3_BREAK
+                stop_motor()
+        
+        elif machine_state == MachineState.LINE3_BREAK:
+            if is_front_empty():
+                machine_state = MachineState.LINE3_MOVE
+                start_motor()
+
+except KeyboardInterrupt:
+    print("Measurement stopped by user")
+finally:
+    GPIO.cleanup()
