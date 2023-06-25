@@ -40,54 +40,53 @@ while True:
         light_state = LightState.ON
         turn_light_on()
 
-    match machine_state:
-        case MachineState.LINE1_MOVE:
-            if is_front_empty():
-                continue
-            elif is_right_empty():
-                machine_state = MachineState.LINE2_MOVE
-                change_line_to_right()
-            else:
-                machine_state = MachineState.LINE1_BREAK
-                stop_motor()
-        
-        case MachineState.LINE1_BREAK:
-            if is_front_empty():
-                machine_state = MachineState.LINE1_MOVE
-                start_motor()
-        
-        case MachineState.LINE2_MOVE:
-            if is_front_empty():
-                continue
-            elif is_right_empty():
-                machine_state = MachineState.LINE3_MOVE
-                change_line_to_right()
-            elif is_left_empty():
-                machine_state = MachineState.LINE1_MOVE
-                change_line_to_left()
-            else:
-                machine_state = MachineState.LINE2_BREAK
-                stop_motor()
-        
-        case MachineState.LINE2_BREAK:
-            if is_front_empty():
-                machine_state = MachineState.LINE2_MOVE
-                start_motor()
-        
-        case MachineState.LINE3_MOVE:
-            if is_front_empty():
-                continue
-            if is_left_empty():
-                machine_state = MachineState.LINE2_MOVE
-                change_line_to_left()
-            else:
-                machine_state = MachineState.LINE3_BREAK
-                stop_motor()
-        
-        case MachineState.LINE3_BREAK:
-            if is_front_empty():
-                machine_state = MachineState.LINE3_MOVE
-                start_motor()
+    if machine_state == MachineState.LINE1_MOVE:
+        if is_front_empty():
+            continue
+        elif is_right_empty():
+            machine_state = MachineState.LINE2_MOVE
+            change_line_to_right()
+        else:
+            machine_state = MachineState.LINE1_BREAK
+            stop_motor()
+    
+    elif machine_state == MachineState.LINE1_BREAK:
+        if is_front_empty():
+            machine_state = MachineState.LINE1_MOVE
+            start_motor()
+    
+    elif machine_state == MachineState.LINE2_MOVE:
+        if is_front_empty():
+            continue
+        elif is_right_empty():
+            machine_state = MachineState.LINE3_MOVE
+            change_line_to_right()
+        elif is_left_empty():
+            machine_state = MachineState.LINE1_MOVE
+            change_line_to_left()
+        else:
+            machine_state = MachineState.LINE2_BREAK
+            stop_motor()
+    
+    elif machine_state == MachineState.LINE2_BREAK:
+        if is_front_empty():
+            machine_state = MachineState.LINE2_MOVE
+            start_motor()
+    
+    elif machine_state == MachineState.LINE3_MOVE:
+        if is_front_empty():
+            continue
+        if is_left_empty():
+            machine_state = MachineState.LINE2_MOVE
+            change_line_to_left()
+        else:
+            machine_state = MachineState.LINE3_BREAK
+            stop_motor()
+    
+    elif machine_state == MachineState.LINE3_BREAK:
+        if is_front_empty():
+            machine_state = MachineState.LINE3_MOVE
+            start_motor()
     
     print(f"time: {elapsed_time} {machine_state} {light_state}")
     time.sleep(1)
