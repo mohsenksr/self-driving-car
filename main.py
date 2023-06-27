@@ -2,7 +2,7 @@ from enum import Enum
 import time
 import RPi.GPIO as GPIO
 
-from statics import LEFT_SENSOR_TRIGGER_PIN, LEFT_SENSOR_ECHO_PIN, LIGHT_PIN
+from statics import *
 from dc_motor import start_motor, stop_motor
 from distances import is_front_empty, is_right_empty, is_left_empty
 from light_sensor import is_enviromental_lights_enough
@@ -24,9 +24,10 @@ class LightState(Enum):
 try:
     #initialize raspberry
     GPIO.setmode(GPIO.BCM)
-    GPIO.setup(LEFT_SENSOR_TRIGGER_PIN, GPIO.OUT)
-    GPIO.setup(LEFT_SENSOR_ECHO_PIN, GPIO.IN)
+    GPIO.setup(FRONT_SENSOR_TRIGGER_PIN, GPIO.OUT)
+    GPIO.setup(FRONT_SENSOR_ECHO_PIN, GPIO.IN)
     GPIO.setup(LIGHT_PIN, GPIO.OUT)
+    GPIO.setup(DC_MOTOR_PIN, GPIO.OUT)
 
 
     light_state = LightState.OFF
