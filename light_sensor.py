@@ -75,4 +75,5 @@ def main():
 
 def is_enviromental_lights_enough():
     lightLevel = readLight()
+    print("Light Level : " + format(lightLevel, '.2f') + " lx")
     return lightLevel > LIGHT_SENSOR_SENSIVITY_THRESHOLD
