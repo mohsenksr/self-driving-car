@@ -34,6 +34,9 @@ try:
 
     light_state = LightState.OFF
     machine_state = MachineState.LINE2_MOVE
+    turn_light_off()
+    stop_motor()
+    
 
     start_command = input("type START to start machine\n")
     while not start_command == "START":
