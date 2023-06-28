@@ -14,10 +14,12 @@ from servo_motor import change_line_to_left, change_line_to_right
 
 
 def is_front_empty():
+    if elapsed_time == 1:
+        print("___Front is empty")
     if elapsed_time % 10 == 0 and (elapsed_time // 10) % 2 == 0:
-        print("Front is empty")
+        print("___Front is empty")
     elif elapsed_time % 10 == 0 and (elapsed_time // 10) % 2 == 1:
-        print("Front is full")
+        print("___Front is full")
     return (elapsed_time // 10) % 2 == 0
 
 class MachineState(Enum):
