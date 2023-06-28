@@ -1,21 +1,3 @@
-#!/usr/bin/python
-# ---------------------------------------------------------------------
-#    ___  ___  _ ____
-#   / _ \/ _ \(_) __/__  __ __
-#  / , _/ ___/ /\ \/ _ \/ // /
-# /_/|_/_/  /_/___/ .__/\_, /
-#                /_/   /___/
-#
-#           bh1750.py
-# Read data from a BH1750 digital light sensor.
-#
-# Author : Matt Hawkins
-# Date   : 26/06/2018
-#
-# For more information please visit :
-# https://www.raspberrypi-spy.co.uk/?s=bh1750
-#
-# ---------------------------------------------------------------------
 import time
 
 import smbus
@@ -75,5 +57,5 @@ def main():
 
 def is_enviromental_lights_enough():
     lightLevel = readLight()
-    print("Light Level : " + format(lightLevel, '.2f') + " lx")
+    # print("Light Level : " + format(lightLevel, '.2f') + " lx")
     return lightLevel > LIGHT_SENSOR_SENSIVITY_THRESHOLD

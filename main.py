@@ -4,10 +4,23 @@ import RPi.GPIO as GPIO
 
 from statics import *
 from dc_motor import start_motor, stop_motor
-from distances import is_front_empty, is_right_empty, is_left_empty
+
+# from distances import is_front_empty, is_right_empty, is_left_empty
+from distances import is_right_empty, is_left_empty
+
 from light_sensor import is_enviromental_lights_enough
 from light import turn_light_off, turn_light_on
 from servo_motor import change_line_to_left, change_line_to_right
+
+
+def is_front_empty():
+    if elapsed_time == 1:
+        print("___Front is empty")
+    if elapsed_time % 10 == 0 and (elapsed_time // 10) % 2 == 0:
+        print("___Front is empty")
+    elif elapsed_time % 10 == 0 and (elapsed_time // 10) % 2 == 1:
+        print("___Front is full")
+    return (elapsed_time // 10) % 2 == 0
 
 class MachineState(Enum):
     LINE1_MOVE = 1
@@ -26,12 +39,17 @@ try:
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(FRONT_SENSOR_TRIGGER_PIN, GPIO.OUT)
     GPIO.setup(FRONT_SENSOR_ECHO_PIN, GPIO.IN)
+    GPIO.setup(LEFT_SENSOR_ECHO_PIN, GPIO.IN)
+    GPIO.setup(RIGHT_SENSOR_ECHO_PIN, GPIO.IN)
     GPIO.setup(LIGHT_PIN, GPIO.OUT)
     GPIO.setup(DC_MOTOR_PIN, GPIO.OUT)
 
 
     light_state = LightState.OFF
     machine_state = MachineState.LINE2_MOVE
+    turn_light_off()
+    stop_motor()
+    
 
     start_command = input("type START to start machine\n")
     while not start_command == "START":
