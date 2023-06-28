@@ -59,7 +59,8 @@ try:
             turn_light_on()
 
         if machine_state == MachineState.LINE1_MOVE:
-            if is_front_empty():
+            # if is_front_empty():
+            if (elapsed_time // 10) % 2 == 0:
                 continue
             elif is_right_empty():
                 machine_state = MachineState.LINE2_MOVE
