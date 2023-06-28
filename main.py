@@ -4,10 +4,15 @@ import RPi.GPIO as GPIO
 
 from statics import *
 from dc_motor import start_motor, stop_motor
-from distances import is_front_empty, is_right_empty, is_left_empty
+# from distances import is_front_empty, is_right_empty, is_left_empty
+from distances import is_right_empty, is_left_empty
 from light_sensor import is_enviromental_lights_enough
 from light import turn_light_off, turn_light_on
 from servo_motor import change_line_to_left, change_line_to_right
+
+
+def is_front_empty():
+    return (elapsed_time // 10) % 2 == 0
 
 class MachineState(Enum):
     LINE1_MOVE = 1
@@ -59,8 +64,7 @@ try:
             turn_light_on()
 
         if machine_state == MachineState.LINE1_MOVE:
-            # if is_front_empty():
-            if (elapsed_time // 10) % 2 == 0:
+            if is_front_empty():
                 continue
             elif is_right_empty():
                 machine_state = MachineState.LINE2_MOVE
