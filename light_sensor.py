@@ -2,6 +2,7 @@ import time
 
 import smbus
 
+from client import send_report
 from statics import LIGHT_SENSOR_SENSIVITY_THRESHOLD
 
 # Define some constants from the datasheet
@@ -54,8 +55,9 @@ def main():
         time.sleep(0.5)
 
 
-
 def is_enviromental_lights_enough():
     lightLevel = readLight()
     # print("Light Level : " + format(lightLevel, '.2f') + " lx")
+    send_report("LightSensor", lightLevel)
+
     return lightLevel > LIGHT_SENSOR_SENSIVITY_THRESHOLD

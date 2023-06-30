@@ -3,6 +3,7 @@ import time
 
 import RPi.GPIO as GPIO
 
+from client import send_report
 from statics import *
 
 
@@ -34,6 +35,9 @@ def is_front_empty():
     pulse_duration = pulse_end - pulse_start
     distance = pulse_duration * 17150  # Speed of sound = 343 meters per second (17150 = 34300 / 2)
     distance = round(distance, 2)
+
+    send_report("Front", distance)
+
     return distance > PROXIMITY_THRESHOLD
     
     
@@ -55,6 +59,8 @@ def is_left_empty():
     pulse_duration = pulse_end - pulse_start
     distance = pulse_duration * 17150  # Speed of sound = 343 meters per second (17150 = 34300 / 2)
     distance = round(distance, 2)
+
+    send_report("Left", distance)
     return distance > PROXIMITY_THRESHOLD
     
     
@@ -76,4 +82,7 @@ def is_right_empty():
     pulse_duration = pulse_end - pulse_start
     distance = pulse_duration * 17150  # Speed of sound = 343 meters per second (17150 = 34300 / 2)
     distance = round(distance, 2)
+
+
+    send_report("Right", distance)
     return distance > PROXIMITY_THRESHOLD
